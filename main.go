@@ -1,18 +1,14 @@
 package main
 
 import (
-	"database/sql"
+	"dataViewer/database"
+	"dataViewer/routes"
 	"fmt"
+	"log"
+	"net/http"
 
-	dbConfig "dataViewer/config"
-
-	Entity "dataViewer/entities"
-
-	database "dataViewer/database"
+	"github.com/gorilla/mux"
 )
-
-var db *sql.DB
-var errsql error
 
 func checkErr(err error) {
 	if err != nil {
@@ -20,40 +16,14 @@ func checkErr(err error) {
 	}
 }
 
-func sqlSelect() {
-	sqlStatement, err := db.Query("SELECT * FROM users")
-	checkErr(err)
-
-	for sqlStatement.Next() {
-		var Users Entity.User
-
-		err := sqlStatement.Scan(
-			&Users.UserId,
-			&Users.Name,
-			&Users.Password,
-			&Users.Email,
-			&Users.Address,
-			&Users.CreationDate,
-		)
-		checkErr(err)
-
-		fmt.Printf("UserId: %d, Name: %s, Password: %s, Email: %s, Address: %s, CreationDate: %s", Users.UserId, Users.Name, Users.Password, Users.Email, Users.Address, Users.CreationDate)
-	}
-}
-
 func main() {
+	database.OpenConnection()
+	//database.Migrate()
 
-	db, errsql = database.OpenConnection(dbConfig.PostgresDriver, dbConfig.ConnectionString, dbConfig.DbName)
+	router := mux.NewRouter().StrictSlash(true)
 
-	if errsql != nil {
-		panic(errsql.Error())
-	} else {
-		fmt.Println("Connected!")
-	}
+	routes.RegisterUserRoutes(router)
 
-	checkErr(errsql)
-
-	defer database.CloseConnection(db)
-
-	sqlSelect()
+	log.Println(fmt.Sprintf("Starting server on port %s", "5000"))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", 5000), router))
 }

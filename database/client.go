@@ -1,21 +1,28 @@
 package database
 
 import (
-	"database/sql"
-	"fmt"
+	config "dataViewer/config"
+	entities "dataViewer/entities"
+	"log"
+
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-var db *sql.DB
+var Instance *gorm.DB
 var errsql error
 
-func OpenConnection(PostgresDriver, ConnectionString, DbName string) (*sql.DB, error) {
-	fmt.Printf("Acessing %s... ", DbName)
-	db, errsql = sql.Open(PostgresDriver, ConnectionString)
+func OpenConnection() {
+	db, err := gorm.Open(postgres.Open(config.ConnectionString), &gorm.Config{})
 
-	return db, errsql
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("Connected to Database %s", db.Name())
 }
 
-func CloseConnection(db *sql.DB) {
-
-	errsql = db.Close()
+func Migrate() {
+	Instance.AutoMigrate(&entities.User{})
+	log.Println("database migration completed")
 }

@@ -1,0 +1,45 @@
+@host = localhost:5000
+
+//create User
+POST http://{{host}}/user HTTP/1.1
+Content-Type: application/json
+
+{
+	"name": "Jucá Ribeiro",
+	"password": "encryptPassword",
+	"email": "juca@gmail.com",
+	"address": "Rua Marcelo André, 923, José Pedro",
+	"creationdate": "2022-10-09"
+}
+
+###
+
+// Get Product By ID
+GET http://{{host}}/user/23 HTTP/1.1
+content-type: application/json
+
+###
+
+// Get All Products
+GET http://{{host}}/user HTTP/1.1
+content-type: application/json
+
+###
+
+// Update Product
+PUT http://{{host}}/user/2 HTTP/1.1
+content-type: application/json
+
+{
+	"name": "Antônio Ribeiro",
+	"password": "encryptPassword",
+	"email": "juca@gmail.com",
+	"address": "Rua Marcelo André, 923, José Pedro",
+	"creationdate": "2022-10-09"
+}
+
+###
+
+// Delete Product
+DELETE http://{{host}}/user/23 HTTP/1.1
+content-type: application/json
