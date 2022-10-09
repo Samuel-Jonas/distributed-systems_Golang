@@ -2,12 +2,18 @@ package dbconfig
 
 import "fmt"
 
-const PostgresDriver = "postgres"
-const User = "postgres"
-const Host = "localhost"
-const Port = "5432"
-const Password = "LOSfro@#33"
-const DbName = "sd_servicesystem"
-const TableName = "users"
+const (
+	User     = "postgres"
+	Host     = "localhost"
+	Port     = "5432"
+	Password = "LOSfro@#33"
+	Name     = "sd_servicesystem"
+)
 
-var ConnectionString = fmt.Sprintf("host=%s port=%s user=%s "+"password=%s dbname=%s sslmode=disable", Host, Port, User, Password, DbName)
+var ConnectionString = fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
+	Host,
+	Port,
+	User,
+	Name,
+	Password,
+)

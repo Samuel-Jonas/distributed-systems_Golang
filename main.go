@@ -1,7 +1,6 @@
 package main
 
 import (
-	"dataViewer/database"
 	"dataViewer/routes"
 	"fmt"
 	"log"
@@ -10,15 +9,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func checkErr(err error) {
-	if err != nil {
-		panic(err.Error())
-	}
-}
-
 func main() {
-	database.OpenConnection()
-	//database.Migrate()
 
 	router := mux.NewRouter().StrictSlash(true)
 
