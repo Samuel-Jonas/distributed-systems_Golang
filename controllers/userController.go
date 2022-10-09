@@ -5,10 +5,16 @@ import (
 	"dataViewer/entities"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
+
+type Return struct {
+	Sucess bool
+	Id     string
+}
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	db := database.OpenConnection()
@@ -19,9 +25,14 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	result := db.Create(&user)
 
 	if result.RowsAffected == 0 {
+		w.WriteHeader(http.StatusNotAcceptable)
 		json.NewEncoder(w).Encode(errors.New("User not created"))
+		return
 	}
-	json.NewEncoder(w).Encode(user)
+	w.WriteHeader(http.StatusCreated)
+	jsonString := Return{Sucess: true, Id: user.UserId.String()}
+	message, _ := json.Marshal(jsonString)
+	json.NewEncoder(w).Encode(string(message))
 
 }
 
@@ -37,15 +48,21 @@ func checkIfUserExists(userId string) bool {
 
 func GetUserById(w http.ResponseWriter, r *http.Request) {
 	db := database.OpenConnection()
-	userId := mux.Vars(r)["userId"]
+	params := mux.Vars(r)
+	userId := params["id"]
+	fmt.Println(params)
+
 	if checkIfUserExists(userId) == false {
+		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode("User not found!")
 		return
 	}
 	var user entities.User
-	db.First(&user, userId)
+	db.First(&user, "user_id = ?", userId)
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusAccepted)
 	json.NewEncoder(w).Encode(user)
+
 }
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
@@ -53,31 +70,14 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	var users []entities.User
 	db.Find(&users)
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusAccepted)
 	json.NewEncoder(w).Encode(users)
 }
 
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	db := database.OpenConnection()
-	userId := mux.Vars(r)["userId"]
-	if checkIfUserExists(userId) == false {
-		json.NewEncoder(w).Encode("User not found!")
-		return
-	}
-
-	var user entities.User
-	db.First(&user, userId)
-	json.NewDecoder(r.Body).Decode(&user)
-	db.Save(&user)
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(user)
-
-}
-
-func DeleteUser(w http.ResponseWriter, r *http.Request) {
-	db := database.OpenConnection()
-	w.Header().Set("Content-Type", "application/json")
-	userId := mux.Vars(r)["userId"]
+	params := mux.Vars(r)
+	userId := params["id"]
 	if checkIfUserExists(userId) == false {
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode("User not found!")
@@ -85,6 +85,40 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var user entities.User
-	db.Delete(&user, userId)
+	result := db.Model(&user).Where("user_id = ?", userId).Updates(user)
+
+	if result.RowsAffected == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode("User data not update")
+		return
+	}
+
+	json.NewDecoder(r.Body).Decode(&user)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusAccepted)
+	json.NewEncoder(w).Encode(user)
+
+}
+
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
+	db := database.OpenConnection()
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	userId := params["id"]
+	if checkIfUserExists(userId) == false {
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode("User not found!")
+		return
+	}
+
+	var user entities.User
+	result := db.Where("user_id = ?", userId).Delete(&user)
+
+	if result.RowsAffected == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode("User not deleted")
+		return
+	}
+	w.WriteHeader(http.StatusAccepted)
 	json.NewEncoder(w).Encode("User deleted successfully!")
 }
