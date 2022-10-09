@@ -4,9 +4,11 @@ import (
 	"database/sql"
 	"fmt"
 
-	dbConfig "databasePostgres/dbconfig"
+	dbConfig "dataViewer/config"
 
-	_ "github.com/lib/pq"
+	Entity "dataViewer/entities"
+
+	database "dataViewer/database"
 )
 
 var db *sql.DB
@@ -23,7 +25,7 @@ func sqlSelect() {
 	checkErr(err)
 
 	for sqlStatement.Next() {
-		var Users dbConfig.Userr
+		var Users Entity.User
 
 		err := sqlStatement.Scan(
 			&Users.UserId,
@@ -40,8 +42,8 @@ func sqlSelect() {
 }
 
 func main() {
-	fmt.Printf("Acessing %s... ", dbConfig.DbName)
-	db, errsql = sql.Open(dbConfig.PostgresDriver, dbConfig.ConnectionString)
+
+	db, errsql = database.OpenConnection(dbConfig.PostgresDriver, dbConfig.ConnectionString, dbConfig.DbName)
 
 	if errsql != nil {
 		panic(errsql.Error())
@@ -51,7 +53,7 @@ func main() {
 
 	checkErr(errsql)
 
-	defer db.Close()
+	defer database.CloseConnection(db)
 
 	sqlSelect()
 }
