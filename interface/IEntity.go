@@ -1,4 +1,4 @@
-package IDENT
+package ident
 
 type IEntity interface {
 }

@@ -12,8 +12,8 @@ import (
 )
 
 type Return struct {
-	Sucess bool
-	Id     string
+	Sucess bool   `json:"success"`
+	Id     string `json:"id"`
 }
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -32,7 +32,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	jsonString := Return{Sucess: true, Id: user.UserId.String()}
 	message, _ := json.Marshal(jsonString)
-	json.NewEncoder(w).Encode(string(message))
+	json.NewEncoder(w).Encode(json.RawMessage(message))
 
 }
 
