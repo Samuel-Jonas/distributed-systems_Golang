@@ -4,16 +4,14 @@ import "fmt"
 
 const (
 	User     = "postgres"
-	Host     = "localhost"
-	Port     = "5432"
-	Password = "LOSfro@#33"
-	Name     = "sd_servicesystem"
+	Host     = "database"
+	Password = "postgres"
+	Name     = "postgres"
 )
 
-var ConnectionString = fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
-	Host,
-	Port,
+var ConnectionString = fmt.Sprintf("postgresql://%s:%s@%s:5432/%s?sslmode=disable",
 	User,
-	Name,
 	Password,
+	Host,
+	Name,
 )
