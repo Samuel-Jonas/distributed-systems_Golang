@@ -80,7 +80,7 @@ Application listening on - <http://localhost:5000>
 4. Delete
 
     Route - **/deleteUserId/{id}** \
-    HTTP Method - DELETE
+    HTTP Method - DELETE \
     Path Variable - User identifier passed in URL
 
     **Request body**
