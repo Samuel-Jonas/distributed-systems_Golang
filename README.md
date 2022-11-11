@@ -9,15 +9,15 @@ Just a crud in Golang using Rest and gRPC to communicate with database and proce
 
 #### Setup application 
 
-    * Clone this repos
-    * Ensure Docker is running correctly on your machine
-    * Install Docker Compose if you don´t have it
-    * In the aplication local path run:
+    1. Clone this repos
+    2. Ensure Docker is running correctly on your machine
+    3. Install Docker Compose if you don´t have it
+    4. In the aplication´s local path run:
     
 
 
 ~~~shell
-    docker-compose up
+docker-compose up
 ~~~
 
 
@@ -43,4 +43,21 @@ Just a crud in Golang using Rest and gRPC to communicate with database and proce
 
     Route - **/getUserId/{id}** \
     HTTP Method - GET \
-    Path Variable - 
+    Path Variable - User identifier passed in url \
+
+    **Request body**
+
+    ~~~javascript
+    empty
+    ~~~
+
+    Route - **/getUsers** \
+    HTTP Method - GET \
+    
+    **Request body**
+
+    ~~~javascript
+    empty
+    ~~~
+
+3. Update
