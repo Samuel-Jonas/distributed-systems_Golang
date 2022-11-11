@@ -1,18 +1,19 @@
 # distributed-systems_Golang
 Just a crud in Golang using Rest and gRPC to communicate with database and process with Architecture based on Microservices.
 
-## REST API CRUD
-
-[Application Link](http://localhost:5000) - Localhost
+## REST API
 
 ![API REST Golang](images/golangImg.png)
 
+
+[Application Link](http://localhost:5000) - Localhost
+
 1. Create 
 
-    Route - **/createUser** 
+    Route - **/createUser** \
     HTTP Method - POST
 
-    **BODY**
+    **body**
 
     ~~~json
     {
@@ -25,5 +26,5 @@ Just a crud in Golang using Rest and gRPC to communicate with database and proce
 
 2. Read 
 
-    Route - **/getUserId/{id}**
+    Route - **/getUserId/{id}**\
     HTTP Method - GET
