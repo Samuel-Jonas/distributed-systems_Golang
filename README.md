@@ -21,7 +21,7 @@ docker-compose up
 ~~~
 
 
-[Application listening on](http://localhost:5000) - http://localhost:5000
+Application listening on - <http://localhost:5000>
 
 1. Create 
 
@@ -43,7 +43,7 @@ docker-compose up
 
     Route - **/getUserId/{id}** \
     HTTP Method - GET \
-    Path Variable - User identifier passed in url \
+    Path Variable - User identifier passed in URL
 
     **Request body**
 
@@ -52,7 +52,7 @@ docker-compose up
     ~~~
 
     Route - **/getUsers** \
-    HTTP Method - GET \
+    HTTP Method - GET 
     
     **Request body**
 
@@ -61,3 +61,30 @@ docker-compose up
     ~~~
 
 3. Update
+
+    Route - **/updateUserId/{id}** \
+    HTTP Method - PUT \
+    Path Variable - User identifier passed in URL
+
+    **Request body**
+
+    ~~~json
+    {
+        "name": "exemple",
+        "password": "passwordEncryptExample",
+        "email": "email@exemple.com",
+        "address": "addressExemple"
+    }
+    ~~~
+
+4. Delete
+
+    Route - **/deleteUserId/{id}** \
+    HTTP Method - DELETE
+    Path Variable - User identifier passed in URL
+
+    **Request body**
+
+    ~~~javascript
+    empty
+    ~~~
