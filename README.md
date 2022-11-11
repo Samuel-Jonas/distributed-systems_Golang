@@ -14,9 +14,11 @@ Just a crud in Golang using Rest and gRPC to communicate with database and proce
     * Install Docker Compose if you don´t have it
     * In the aplication local path run:
     
-    ~~~sh
-        docker-compose up
-    ~~~
+
+
+~~~shell
+    docker-compose up
+~~~
 
 
 [Application listening on](http://localhost:5000) - http://localhost:5000
