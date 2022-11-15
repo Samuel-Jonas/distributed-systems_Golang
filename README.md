@@ -21,6 +21,23 @@ docker-compose up
 ~~~
 
 
+#### gRPC Setup
+
+    1. Install protoc (protocol compiler)
+    2. Install plugins protoc-gen-go and protoc-gen-go-grpc to generate gRPC server in GO
+    3. Execute the following command:
+
+
+
+~~~shell
+protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
+    --go-grpc_out=pb --go-grpc_opt=paths=source_relative \
+    proto/*.proto
+~~~
+
+    4. Run `go mod tidy` from any error in go code if you have it.
+
+
 Application listening on - <http://localhost:5000>
 
 1. Create 
