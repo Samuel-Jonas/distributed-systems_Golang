@@ -20,6 +20,6 @@ func OpenConnection() *gorm.DB {
 	log.Println("Connected")
 
 	Db.AutoMigrate(entities.User{})
-	fmt.Println("Migrated")
+	fmt.Println("Query excuted")
 	return Db
 }
