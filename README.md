@@ -37,7 +37,7 @@ protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
 
 
 
-    4. Run **go mod tidy** from any error in go code if you have it.
+    4. Run go mod tidy from any error in go code if you have it.
 
 
 Application listening on - <http://localhost:5000>
