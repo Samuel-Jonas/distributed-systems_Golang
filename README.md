@@ -1,5 +1,5 @@
 # distributed-systems_Golang
-Just a crud in Golang using Rest and gRPC to communicate with database and process with Architecture based on Microservices.
+Just a crud in Golang using Rest to communicate with database and process with Architecture based on Microservices.
 
 ## REST API
 
@@ -12,33 +12,14 @@ Just a crud in Golang using Rest and gRPC to communicate with database and proce
     1. Clone this repos
     2. Ensure Docker is running correctly on your machine
     3. Install Docker Compose if you don´t have it
-    4. In the aplication´s local path run:
+    4. Run Docker build to generate the image on Dockerfile
+    5. In the aplication´s local path run:
     
 
 
 ~~~s
 docker-compose up
 ~~~
-
-
-#### gRPC Setup
-
-    1. Install protoc (protocol compiler)
-    2. Install plugins protoc-gen-go and protoc-gen-go-grpc to generate gRPC server in GO
-    3. The following command is used to generate gRPC go server:
-
-
-
-~~~s
-protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
-    --go-grpc_out=pb --go-grpc_opt=paths=source_relative \
-    proto/*.proto
-~~~
-
-
-
-    4. Run go mod tidy from any error in go code if you have it.
-
 
 Application listening on - <http://localhost:5000>
 
