@@ -4,7 +4,7 @@ import "fmt"
 
 const (
 	User     = "postgres"
-	Host     = "localhost"
+	Host     = "database"
 	Password = "postgres"
 	Name     = "postgres"
 )

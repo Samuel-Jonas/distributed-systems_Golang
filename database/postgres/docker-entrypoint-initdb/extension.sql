@@ -1,3 +1,9 @@
+CREATE DATABASE postgres;
+
+CREATE USER postgres WITH superuser PASSWORD 'postgres';
+
+GRANT ALL PRIVILEGES ON DATABASE postgres TO postgres;
+
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE users (
