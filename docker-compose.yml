@@ -20,9 +20,10 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - ./database/postgres/docker-entrypoint-initdb:/docker-entrypoint-initdb.d/
+      - './database/postgres/docker-entrypoint-initdb/extension.sql:/docker-entrypoint-initdb.d/init.sql'
+      # - ./database/postgres/docker-entrypoint-initdb:/docker-entrypoint-initdb.d/
     ports:
-      - '5432:5432'
+      - '5432'
     networks:
       - con-db
     restart: always
