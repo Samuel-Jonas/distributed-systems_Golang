@@ -1,5 +1,5 @@
 # Start from golang base image
-FROM golang:latest
+FROM golang:1.19.4-alpine3.17
 
 # Setup folders
 WORKDIR /app

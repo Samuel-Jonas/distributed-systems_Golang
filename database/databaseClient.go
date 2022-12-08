@@ -11,8 +11,10 @@ import (
 )
 
 func OpenConnection() *gorm.DB {
-	Db, err := gorm.Open(postgres.Open(config.ConnectionString), &gorm.Config{})
-
+	Db, err := gorm.Open(postgres.New(postgres.Config{
+		DSN:                  config.ConnectionString,
+		PreferSimpleProtocol: true,
+	}), &gorm.Config{})
 	if err != nil {
 		log.Panic(err)
 		return nil

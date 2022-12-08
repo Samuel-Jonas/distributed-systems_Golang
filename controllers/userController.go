@@ -4,8 +4,9 @@ import (
 	"dataViewer/database"
 	"dataViewer/entities"
 	"encoding/json"
-	"errors"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -19,16 +20,24 @@ type Return struct {
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	db := database.OpenConnection()
 	w.Header().Set("Content-Type", "application/json")
+	reqBody, err := ioutil.ReadAll(r.Body)
+
+	if err != nil {
+		log.Printf("Unable to read the body: %v\n", err)
+	}
+
 	var user entities.User
-	json.NewDecoder(r.Body).Decode(&user)
+	json.Unmarshal(reqBody, &user)
 
-	result := db.Create(&user)
-
-	if result.RowsAffected == 0 {
-		w.WriteHeader(http.StatusNotAcceptable)
-		json.NewEncoder(w).Encode(errors.New("User not created"))
+	if e := db.Create(&user).Error; e != nil {
+		log.Println("Unable to create new user")
+		jsonString := Return{Sucess: false, Id: " "}
+		message, _ := json.Marshal(jsonString)
+		json.NewEncoder(w).Encode(json.RawMessage(message))
 		return
 	}
+	fmt.Println("Endpoint hit! Create new user")
+
 	w.WriteHeader(http.StatusCreated)
 	jsonString := Return{Sucess: true, Id: user.UserId.String()}
 	message, _ := json.Marshal(jsonString)
@@ -77,19 +86,22 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	db := database.OpenConnection()
 	params := mux.Vars(r)
-	userId := params["id"]
-	if checkIfUserExists(userId) == false {
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode("User not found!")
+	var user entities.User
+	db.First(&user, params["user_id"])
+
+	reqBody, err := ioutil.ReadAll(r.Body)
+
+	if err != nil {
+		log.Printf("Error reading the body %v\n", err)
 		return
 	}
 
-	var user entities.User
-	result := db.Model(&user).Where("user_id = ?", userId).Updates(user)
+	json.Unmarshal(reqBody, &user)
 
-	if result.RowsAffected == 0 {
+	if result := db.Model(&user).Updates(user).Error; result != nil {
+		log.Println("Unable to update user")
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode("User data not update")
+		json.NewEncoder(w).Encode("Unable to update user")
 		return
 	}
 
@@ -104,21 +116,22 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	db := database.OpenConnection()
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
-	userId := params["id"]
-	if checkIfUserExists(userId) == false {
+	var user entities.User
+
+	if err := db.First(&user, params["user_id"]).Error; err != nil {
+		log.Printf("Unable to find id %v\n", err)
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode("User not found!")
 		return
 	}
 
-	var user entities.User
-	result := db.Where("user_id = ?", userId).Delete(&user)
-
-	if result.RowsAffected == 0 {
+	if result := db.Delete(&user).Error; result != nil {
+		log.Println("Unable to delete user")
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode("User not deleted")
 		return
 	}
+
 	w.WriteHeader(http.StatusAccepted)
 	json.NewEncoder(w).Encode("User deleted successfully!")
 }
